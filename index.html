@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="A glassmorphism calculator built with HTML, CSS and vanilla JavaScript." />
+  <title>Glass Calculator</title>
+
+  <!-- Link the stylesheet: all visual design lives in style.css -->
+  <link rel="stylesheet" href="style.css" />
+  <script src="script.js" defer></script>
+</head>
+<body>
+  <main class="calculator" aria-label="Calculator">
+
+    <!-- Display: previous expression (small) + current input/result (large).
+         aria-live lets screen readers announce result changes. -->
+    <section class="display" aria-live="polite">
+      <div class="display__history" id="history"></div>
+      <div class="display__current" id="current">0</div>
+    </section>
+
+    <!-- Keypad: JavaScript reads the data-* attributes to know what each button does.
+         data-value  -> a digit, decimal point or operator to append
+         data-action -> a command (clear, delete, equals) -->
+    <section class="keys" aria-label="Calculator keys">
+      <button class="key key--fn" data-action="clear">C</button>
+      <button class="key key--fn" data-action="delete" aria-label="Delete last character">DEL</button>
+      <button class="key key--op" data-value="/" aria-label="Divide">÷</button>
+      <button class="key key--op" data-value="*" aria-label="Multiply">×</button>
+
+      <button class="key" data-value="7">7</button>
+      <button class="key" data-value="8">8</button>
+      <button class="key" data-value="9">9</button>
+      <button class="key key--op" data-value="-" aria-label="Subtract">−</button>
+
+      <button class="key" data-value="4">4</button>
+      <button class="key" data-value="5">5</button>
+      <button class="key" data-value="6">6</button>
+      <button class="key key--op" data-value="+" aria-label="Add">+</button>
+
+      <button class="key" data-value="1">1</button>
+      <button class="key" data-value="2">2</button>
+      <button class="key" data-value="3">3</button>
+      <!-- Equals spans two rows (see .key--equals in style.css) -->
+      <button class="key key--equals" data-action="equals" aria-label="Equals">=</button>
+
+      <button class="key key--zero" data-value="0">0</button>
+      <button class="key" data-value=".">.</button>
+    </section>
+  </main>
+
+  <!-- Link the script at the end of <body> so the elements above exist when it runs -->
+  <script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,178 @@
+/* ==========================================================
+   Glass Calculator - style.css
+   Design tokens are CSS variables so the theme is easy to change.
+   ========================================================== */
+:root {
+  --bg-1: #0f2b46;
+  --bg-2: #3a1c71;
+  --blob-a: #ff7e5f;
+  --blob-b: #2ee6c5;
+
+  --glass: rgba(255, 255, 255, 0.12);
+  --glass-strong: rgba(255, 255, 255, 0.2);
+  --glass-border: rgba(255, 255, 255, 0.28);
+  --text: #f5f7fb;
+  --text-dim: rgba(245, 247, 251, 0.62);
+  --accent: #ffb454;      /* operators */
+  --accent-2: #2ee6c5;    /* equals */
+  --radius: 18px;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  padding: 16px;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  color: var(--text);
+  background: linear-gradient(135deg, var(--bg-1), var(--bg-2));
+  overflow-x: hidden;
+}
+
+/* Blurred colour blobs behind the glass: without something colourful
+   to blur, backdrop-filter has nothing to show. */
+body::before,
+body::after {
+  content: "";
+  position: fixed;
+  width: 55vmax;
+  height: 55vmax;
+  border-radius: 50%;
+  filter: blur(90px);
+  opacity: 0.55;
+  z-index: -1;
+}
+body::before { background: var(--blob-a); top: -25vmax; left: -15vmax; }
+body::after  { background: var(--blob-b); bottom: -28vmax; right: -18vmax; }
+
+/* ---------- Calculator card (the glass panel) ---------- */
+.calculator {
+  width: min(100%, 360px);
+  padding: 20px;
+  border-radius: 28px;
+  background: var(--glass);
+  border: 1px solid var(--glass-border);
+  -webkit-backdrop-filter: blur(22px) saturate(140%);
+  backdrop-filter: blur(22px) saturate(140%);
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.35),
+              inset 0 1px 0 rgba(255, 255, 255, 0.25);
+}
+
+/* ---------- Display ---------- */
+.display {
+  min-height: 110px;
+  margin-bottom: 18px;
+  padding: 14px 16px;
+  border-radius: var(--radius);
+  background: rgba(0, 0, 0, 0.22);
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: flex-end;
+  gap: 6px;
+  text-align: right;
+  overflow: hidden;
+}
+
+.display__history {
+  min-height: 1.3em;
+  font-size: 0.95rem;
+  color: var(--text-dim);
+  font-variant-numeric: tabular-nums;
+  max-width: 100%;
+  overflow-x: auto;
+  white-space: nowrap;
+}
+
+.display__current {
+  max-width: 100%;
+  font-size: 2.6rem;
+  font-weight: 500;
+  line-height: 1.1;
+  font-variant-numeric: tabular-nums;
+  overflow-x: auto;
+  white-space: nowrap;
+  scrollbar-width: none;
+}
+.display__current::-webkit-scrollbar { display: none; }
+
+/* Error messages get a warmer colour and smaller text so they fit */
+.display__current.is-error {
+  font-size: 1.3rem;
+  color: #ff8a8a;
+}
+
+/* ---------- Keypad grid: 4 equal columns ---------- */
+.keys {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+}
+
+.key {
+  aspect-ratio: 1 / 1;
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius);
+  background: var(--glass);
+  color: var(--text);
+  font: inherit;
+  font-size: 1.3rem;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition: background 0.18s ease, transform 0.12s ease, box-shadow 0.18s ease;
+}
+
+.key:hover {
+  background: var(--glass-strong);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.2);
+}
+
+/* Pressed state. JS also adds .is-pressed when a keyboard key is used. */
+.key:active,
+.key.is-pressed {
+  transform: scale(0.93);
+  background: rgba(255, 255, 255, 0.3);
+  box-shadow: none;
+}
+
+.key:focus-visible {
+  outline: 2px solid var(--accent-2);
+  outline-offset: 2px;
+}
+
+/* Variants */
+.key--fn { font-size: 1.05rem; color: var(--text-dim); }
+.key--op { color: var(--accent); font-size: 1.6rem; }
+
+.key--equals {
+  grid-row: span 2;            /* tall button on the right */
+  aspect-ratio: auto;
+  background: var(--accent-2);
+  border-color: transparent;
+  color: #06231e;
+  font-size: 1.8rem;
+  font-weight: 600;
+}
+.key--equals:hover { background: #5cf0d6; }
+.key--equals:active,
+.key--equals.is-pressed { background: #22c4a7; }
+
+.key--zero {
+  grid-column: span 2;         /* wide zero button */
+  aspect-ratio: auto;
+}
+
+/* ---------- Responsive tweaks ---------- */
+@media (max-width: 380px) {
+  .calculator { padding: 14px; border-radius: 22px; }
+  .keys { gap: 9px; }
+  .display__current { font-size: 2.2rem; }
+}
+
+/* Respect users who prefer less motion */
+@media (prefers-reduced-motion: reduce) {
+  .key { transition: none; }
+}
